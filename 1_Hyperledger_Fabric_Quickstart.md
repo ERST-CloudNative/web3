@@ -519,5 +519,41 @@ configtx.yaml  core.yaml  orderer.yaml
 [root@hy test-network]# peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset6"]}'
 {"AppraisedValue":800,"Color":"white","ID":"asset6","Owner":"Christopher","Size":15}
 
+[root@hy test-network]# ./network.sh down
+Using docker and docker-compose
+Stopping network
+[+] Running 12/12
+ ✔ Container cli                          Removed                                                                                                  0.5s
+ ✔ Container orderer.example.com          Removed                                                                                                  1.5s
+ ✔ Container peer0.org2.example.com       Removed                                                                                                  2.0s
+ ✔ Container peer0.org1.example.com       Removed                                                                                                  2.2s
+ ✔ Volume compose_orderer2.example.com    Removed                                                                                                  0.0s
+ ✔ Volume compose_peer0.org1.example.com  Removed                                                                                                  0.0s
+ ✔ Volume compose_peer0.org2.example.com  Removed                                                                                                  0.0s
+ ✔ Volume compose_orderer3.example.com    Removed                                                                                                  0.0s
+ ✔ Volume compose_orderer4.example.com    Removed                                                                                                  0.0s
+ ✔ Volume compose_peer0.org3.example.com  Removed                                                                                                  0.0s
+ ✔ Volume compose_orderer.example.com     Removed                                                                                                  0.0s
+ ✔ Network fabric_test                    Removed                                                                                                  0.2s
+Error response from daemon: get docker_orderer.example.com: no such volume
+Error response from daemon: get docker_peer0.org1.example.com: no such volume
+Error response from daemon: get docker_peer0.org2.example.com: no such volume
+Removing remaining containers
+Removing generated chaincode docker images
+Untagged: dev-peer0.org2.example.com-basic_1.0.1-650b7b4f5a8545d710651dc01edee8cf83518ef4b36a67a08be061ba14da653a-c0a713c435d5298d7e406d76938453c6295ec064a3b830682335e59970b8be78:latest
+Deleted: sha256:6399d87d9368f4c614df3a9dede32a8e5ea454eecea71c33f598d12dcdbb140b
+Deleted: sha256:d8165b1a820bdfcb475b72af31800963b5f80ea97998b8763f57e71a64b01523
+Deleted: sha256:16bf7ae525fa415d84147a74bed0a148d522d83b1fb17c55a01ba221cb0155e8
+Deleted: sha256:98a70daf137313550dc6cdb059badb0ea9aa2a5f81da820470b2698f42c2c1a5
+Untagged: dev-peer0.org1.example.com-basic_1.0.1-650b7b4f5a8545d710651dc01edee8cf83518ef4b36a67a08be061ba14da653a-20086c6927e952735a27a90ceb7546bf364568aa2d1f2d3b0a8fde53dfe8f69d:latest
+Deleted: sha256:af38d6efecb9fabd7a4eab73c378a8e5a9894138fcc4f6a6142e47b1a18ba812
+Deleted: sha256:67626003247d937a24751d1c376cc685cf4b715f0e2a632a842f064edf48c5ad
+Deleted: sha256:35541f630fff3928c4a60854c39d51cc00713349dd104b5728949ba5712bbb93
+Deleted: sha256:82f29bd8c89781e32747f9bfe934ea4459ededbd245f6a03ab2cf2f5928ed401
+Unable to find image 'busybox:latest' locally
+latest: Pulling from library/busybox
+3f4d90098f5b: Pull complete
+Digest: sha256:3fbc632167424a6d997e74f52b878d7cc478225cffac6bc977eedfe51c7f4e79
+Status: Downloaded newer image for busybox:latest
 
 ```
