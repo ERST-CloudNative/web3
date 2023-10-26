@@ -3,7 +3,7 @@
 ![image](https://github.com/ERST-CloudNative/web3/assets/4653664/8d01f381-d1b0-4611-b5fc-f12dea72ef93)
 
 
-## 实验列表
+## 实践列表
 
 [Lab 1 - Hyperledger Fabric快速入门](https://github.com/ERST-CloudNative/web3/blob/main/1_Hyperledger_Fabric_Quickstart.md)
 
