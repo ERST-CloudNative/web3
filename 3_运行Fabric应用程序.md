@@ -192,7 +192,7 @@ func newGrpcConnection() *grpc.ClientConn {
 #### 2. 创建Gateway连接
 
 然后，应用程序创建一个Gateway连接，用于访问Fabric Gateway 可访问的任何资源，并随后智能合约会部署到这些网络。Gateway连接需要有三个要求：
-- 与 Fabric Gateway 的 gRPC 连接。
+- Fabric Gateway使用gRPC连接。
 - 用于与网络进行交易的客户端身份。
 - 签名实现用于为客户端身份生成数字签名。
 
