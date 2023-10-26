@@ -15,7 +15,8 @@ asset-transfer-basic/application-gateway-typescript
 asset-transfer-basic/chaincode-(typescript, go, java)
 ```
 
-https://hyperledger-fabric.readthedocs.io/en/latest/_images/AppConceptsOverview.png
+![image](https://github.com/ERST-CloudNative/web3/assets/4653664/461f980a-9edc-4df9-9b54-a7dfddd9dbda)
+
 
 关于本节内容主要有两个部分：
 - 建立区块链网络。 应用程序需要与区块链网络进行交互，因此我们将启动一个基本网络并为我们的应用程序部署智能合约。
