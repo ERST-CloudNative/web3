@@ -15,6 +15,9 @@ VM: 2 OCPU/8 GB/50GB
 # 安装git
 yum install -y git
 
+# 安装jq
+dnf install jq -y
+
 # 安装docker
 yum remove docker docker-common docker-selinux docker-engine -y
 dnf install –y dnf-utils zip unzip
