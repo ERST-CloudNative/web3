@@ -1,115 +1,64 @@
+## Hyperledger Fabric QuickStart
 
+### 环境准备
+
+虚拟机配置
 
 ```
+OS: Oracle Linux 8
+VM: 2 OCPU/8 GB/50GB
+```
+
+安装所需软件
+
+```
+# 安装git
+yum install -y git
+
+# 安装docker
+yum remove docker docker-common docker-selinux docker-engine -y
+dnf install –y dnf-utils zip unzip
+dnf install -y dnf-utils zip unzip
+dnf config-manager –add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+dnf install -y docker-ce --nobest
+systemctl enable docker.service --now
+
+# 安装docker-compose
+
+curl -L https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-linux-x86_64 -o /usr/bin/docker-compose
+chmod +x /usr/bin/docker-compose
+docker-compose --version
+
+# 安装golang
+
+wget https://go.dev/dl/go1.20.10.linux-amd64.tar.gz
+tar -zxvf go1.20.10.linux-amd64.tar.gz -C /usr/local/bin/
+
+## 配置环境变量/etc/profile
+export GOROOT=/usr/local/bin/go/
+export PATH=$GOROOT/bin:$PATH
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
+## 使配置生效
+source /etc/profile
+
+# 验证安装是否成功
+go version
+```
+
+### Fabric测试体验
+
+#### 启动Fabric测试网络
+
+```
+[root@hy ~]# mkdir -p go/src/github.com/b43646/
 [root@hy ~]# cd go/src/github.com/b43646/
-[root@hy b43646]# ls
 [root@hy b43646]# curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh
-[root@hy b43646]# ./install-fabric.sh -h
-Usage: ./install-fabric.sh [-f|--fabric-version <arg>] [-c|--ca-version <arg>] <comp-1> [<comp-2>] ... [<comp-n>] ...
-        <comp> Component to install, one or more of  docker | binary | samples | podman  First letter of component also accepted; If none specified docker | binary | samples is assumed
-        -f, --fabric-version: FabricVersion (default: '2.5.4')
-        -c, --ca-version: Fabric CA Version (default: '1.5.7')
+# 拉取 Docker 容器并克隆示例存储库
 [root@hy b43646]# ./install-fabric.sh docker samples binary
 
-Clone hyperledger/fabric-samples repo
-
-===> Cloning hyperledger/fabric-samples repo
-Cloning into 'fabric-samples'...
-remote: Enumerating objects: 12780, done.
-remote: Counting objects: 100% (812/812), done.
-remote: Compressing objects: 100% (481/481), done.
-remote: Total 12780 (delta 372), reused 595 (delta 282), pack-reused 11968
-Receiving objects: 100% (12780/12780), 22.85 MiB | 21.84 MiB/s, done.
-Resolving deltas: 100% (6826/6826), done.
-fabric-samples v2.5.4 does not exist, defaulting to main. fabric-samples main branch is intended to work with recent versions of fabric.
-
-Pull Hyperledger Fabric binaries
-
-===> Downloading version 2.5.4 platform specific fabric binaries
-===> Downloading:  https://github.com/hyperledger/fabric/releases/download/v2.5.4/hyperledger-fabric-linux-amd64-2.5.4.tar.gz
-===> Will unpack to: /root/go/src/github.com/b43646/fabric-samples
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-100 99.3M  100 99.3M    0     0  32.7M      0  0:00:03  0:00:03 --:--:-- 37.9M
-==> Done.
-===> Downloading version 1.5.7 platform specific fabric-ca-client binary
-===> Downloading:  https://github.com/hyperledger/fabric-ca/releases/download/v1.5.7/hyperledger-fabric-ca-linux-amd64-1.5.7.tar.gz
-===> Will unpack to: /root/go/src/github.com/b43646/fabric-samples
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-100 34.0M  100 34.0M    0     0  20.1M      0  0:00:01  0:00:01 --:--:-- 25.5M
-==> Done.
-
-Pull Hyperledger Fabric docker images
-
-FABRIC_IMAGES: peer orderer ccenv tools baseos
-===> Pulling fabric Images
-====>  docker.io/hyperledger/fabric-peer:2.5.4
-2.5.4: Pulling from hyperledger/fabric-peer
-01085d60b3a6: Pull complete
-5920bb1ab585: Pull complete
-0c13247db338: Pull complete
-f1ebf2febfff: Pull complete
-7ba246813ff2: Pull complete
-20e090879749: Pull complete
-Digest: sha256:c2e735a3cb8250c47ed3589294b3f0c078004ec001b949710f334736651e106d
-Status: Downloaded newer image for hyperledger/fabric-peer:2.5.4
-docker.io/hyperledger/fabric-peer:2.5.4
-====>  docker.io/hyperledger/fabric-orderer:2.5.4
-2.5.4: Pulling from hyperledger/fabric-orderer
-01085d60b3a6: Already exists
-0ec39628d119: Pull complete
-c9ef912f2449: Pull complete
-5f267c8c968e: Pull complete
-54a738441be6: Pull complete
-d6c2bf9dde2f: Pull complete
-Digest: sha256:1a7144705b435062f4be2886de98d0408165cf51326ec721c3f58b40bf8bf139
-Status: Downloaded newer image for hyperledger/fabric-orderer:2.5.4
-docker.io/hyperledger/fabric-orderer:2.5.4
-====>  docker.io/hyperledger/fabric-ccenv:2.5.4
-2.5.4: Pulling from hyperledger/fabric-ccenv
-01085d60b3a6: Already exists
-0a0dd1fd96cb: Pull complete
-6511dcb32b75: Pull complete
-a1ad41013466: Pull complete
-7b4bed92341a: Pull complete
-9c0ab6ce970a: Pull complete
-d79fd538cbf0: Pull complete
-Digest: sha256:b7d312c0f8d4530c6ff4b3ef7277f0338f486d0b617c3012415a32308cbc2254
-Status: Downloaded newer image for hyperledger/fabric-ccenv:2.5.4
-docker.io/hyperledger/fabric-ccenv:2.5.4
-====>  docker.io/hyperledger/fabric-tools:2.5.4
-2.5.4: Pulling from hyperledger/fabric-tools
-01085d60b3a6: Already exists
-367f9186226c: Pull complete
-b47f6a4ae6bc: Pull complete
-b5933c87679e: Pull complete
-77b2bdbf772c: Pull complete
-b2d9526a33e2: Pull complete
-Digest: sha256:b3aea8173802186244663334b4196c415cb267d77ea8c617fdd30652c5a732c4
-Status: Downloaded newer image for hyperledger/fabric-tools:2.5.4
-docker.io/hyperledger/fabric-tools:2.5.4
-====>  docker.io/hyperledger/fabric-baseos:2.5.4
-2.5.4: Pulling from hyperledger/fabric-baseos
-01085d60b3a6: Already exists
-cc16ebc66c1e: Pull complete
-cfb66da0a833: Pull complete
-daa87923bf69: Pull complete
-Digest: sha256:cab2ed27ed8d27e4cacde447a1de51884f0bd9e103a6119e74521e1b90b6d106
-Status: Downloaded newer image for hyperledger/fabric-baseos:2.5.4
-docker.io/hyperledger/fabric-baseos:2.5.4
-===> Pulling fabric ca Image
-====>  docker.io/hyperledger/fabric-ca:1.5.7
-1.5.7: Pulling from hyperledger/fabric-ca
-edaedc954fb5: Pull complete
-793f509072c1: Pull complete
-40231dd4f3a4: Pull complete
-5799c17ab94e: Pull complete
-Digest: sha256:db814e013fc29f94f75a5df6e3920c08a4e96e53a079152df2ffa99e6db24861
-Status: Downloaded newer image for hyperledger/fabric-ca:1.5.7
-docker.io/hyperledger/fabric-ca:1.5.7
 ===> List out hyperledger images
 hyperledger/fabric-ca        1.5       0f07bbee6fb8   8 weeks ago    223MB
 hyperledger/fabric-ca        1.5.7     0f07bbee6fb8   8 weeks ago    223MB
@@ -129,66 +78,36 @@ hyperledger/fabric-ccenv     latest    6dac93f94c87   2 months ago   656MB
 hyperledger/fabric-baseos    2.5       3854817b987d   2 months ago   122MB
 hyperledger/fabric-baseos    2.5.4     3854817b987d   2 months ago   122MB
 hyperledger/fabric-baseos    latest    3854817b987d   2 months ago   122MB
+
+# 安装指定版本的fabric二进制文件
 [root@hy b43646]# ./install-fabric.sh --fabric-version 2.5.0 binary
 
 Pull Hyperledger Fabric binaries
 
 ===> Downloading version 2.5.0 platform specific fabric binaries
 ===> Downloading:  https://github.com/hyperledger/fabric/releases/download/v2.5.0/hyperledger-fabric-linux-amd64-2.5.0.tar.gz
-===> Will unpack to: fabric-samples
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-100 99.3M  100 99.3M    0     0  32.6M      0  0:00:03  0:00:03 --:--:-- 43.0M
-==> Done.
+...
 ===> Downloading version 1.5.7 platform specific fabric-ca-client binary
 ===> Downloading:  https://github.com/hyperledger/fabric-ca/releases/download/v1.5.7/hyperledger-fabric-ca-linux-amd64-1.5.7.tar.gz
 ===> Will unpack to: fabric-samples
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-100 34.0M  100 34.0M    0     0  27.4M      0  0:00:01  0:00:01 --:--:-- 42.1M
+...
 ==> Done.
-[root@hy b43646]# ls
-fabric-samples  install-fabric.sh
+
 [root@hy b43646]# cd fabric-samples/test-network
-[root@hy test-network]# ls
-addOrg3     CHAINCODE_AS_A_SERVICE_TUTORIAL.md  configtx          network.config  organizations       README.md  setOrgEnv.sh
-bft-config  compose                             monitordocker.sh  network.sh      prometheus-grafana  scripts    system-genesis-block
+
+# 运行fabric网络
 [root@hy test-network]# ./network.sh up
-Using docker and docker-compose
-Starting nodes with CLI timeout of '5' tries and CLI delay of '3' seconds and using database 'leveldb' with crypto from 'cryptogen'
-LOCAL_VERSION=v2.5.0
-DOCKER_IMAGE_VERSION=v2.5.4
-Local fabric binaries and docker images are out of  sync. This may cause problems.
-/root/go/src/github.com/b43646/fabric-samples/bin/cryptogen
-Generating certificates using cryptogen tool
-Creating Org1 Identities
-+ cryptogen generate --config=./organizations/cryptogen/crypto-config-org1.yaml --output=organizations
-org1.example.com
-+ res=0
-Creating Org2 Identities
-+ cryptogen generate --config=./organizations/cryptogen/crypto-config-org2.yaml --output=organizations
-org2.example.com
-+ res=0
-Creating Orderer Org Identities
-+ cryptogen generate --config=./organizations/cryptogen/crypto-config-orderer.yaml --output=organizations
-+ res=0
-Generating CCP files for Org1 and Org2
-[+] Running 8/8
- ✔ Network fabric_test                      Created                                                                                                0.3s
- ✔ Volume "compose_orderer.example.com"     Created                                                                                                0.0s
- ✔ Volume "compose_peer0.org1.example.com"  Created                                                                                                0.0s
- ✔ Volume "compose_peer0.org2.example.com"  Created                                                                                                0.0s
- ✔ Container orderer.example.com            Started                                                                                                0.0s
- ✔ Container peer0.org2.example.com         Started                                                                                                0.0s
- ✔ Container peer0.org1.example.com         Started                                                                                                0.0s
- ✔ Container cli                            Started                                                                                                0.0s
-CONTAINER ID   IMAGE                               COMMAND             CREATED         STATUS                  PORTS                                                                                                                             NAMES
-bf1f99c73f3a   hyperledger/fabric-tools:latest     "/bin/bash"         2 seconds ago   Up Less than a second                                                                                                                                     cli
-de35c93780ea   hyperledger/fabric-orderer:latest   "orderer"           2 seconds ago   Up Less than a second   0.0.0.0:7050->7050/tcp, :::7050->7050/tcp, 0.0.0.0:7053->7053/tcp, :::7053->7053/tcp, 0.0.0.0:9443->9443/tcp, :::9443->9443/tcp   orderer.example.com
-5e4cbea81eae   hyperledger/fabric-peer:latest      "peer node start"   2 seconds ago   Up Less than a second   0.0.0.0:9051->9051/tcp, :::9051->9051/tcp, 7051/tcp, 0.0.0.0:9445->9445/tcp, :::9445->9445/tcp                                    peer0.org2.example.com
-3b68dd30458e   hyperledger/fabric-peer:latest      "peer node start"   2 seconds ago   Up Less than a second   0.0.0.0:7051->7051/tcp, :::7051->7051/tcp, 0.0.0.0:9444->9444/tcp, :::9444->9444/tcp                                              peer0.org1.example.com
+```
+#### 查看Fabric测试网络组成
+
+通过命令行可以查看网络组成中包括：两个pee节点+一个order节点
+
+peer节点在Fabric中被称为主节点模块，主要负责存储区块链数据、运行维护链码、提供对外服务接口等作用，这里每个peer节点对应一个组织，分别为org1和org2
+orderer是一种特殊的peer节点，负责排序服务，保持peer之间账本的一致性；
+
+
+
+```
 [root@hy test-network]# docker ps
 CONTAINER ID   IMAGE                               COMMAND             CREATED         STATUS         PORTS                                                                                                                             NAMES
 bf1f99c73f3a   hyperledger/fabric-tools:latest     "/bin/bash"         3 minutes ago   Up 3 minutes                                                                                                                                     cli
