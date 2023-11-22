@@ -21,8 +21,6 @@ dnf install jq -y
 # 安装docker
 yum remove docker docker-common docker-selinux docker-engine -y
 dnf install –y dnf-utils zip unzip
-dnf install -y dnf-utils zip unzip
-dnf config-manager –add-repo=https://download.docker.com/linux/centos/docker-ce.repo
 dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
 dnf install -y docker-ce --nobest
 systemctl enable docker.service --now
